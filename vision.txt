@@ -1,0 +1,51 @@
+SSSB-Refactored/
+│
+├── src/
+│   ├── main/
+│   │   ├── Game.java
+│   │   ├── Main.java
+│   │
+│   ├── engine/
+│   │   ├── GameEngine.java
+│   │   ├── GameUI.java
+│   │   ├── core/
+│   │   │   ├── GameObject.java
+│   │   │   ├── interfaces/
+│   │   │   │   ├── IGameObject.java
+│   │   │   │   ├── IGameEngine.java
+│   │   │   │   ├── IGameUI.java
+│   │   │   │   ├── IInputEvent.java
+│   │   │   │   ├── IBehaviour.java
+│   │   │   │   ├── ITransform.java
+│   │   │   │   ├── ICollider.java
+│   │   │   │   ├── IShape.java
+│
+│   ├── game/
+│   │   ├── players/
+│   │   │   ├── GenericPlayer.java
+│   │   │   ├── Paulinho.java
+│   │   │   ├── Neny.java
+│   │   ├── enemies/
+│   │   │   ├── Snake.java
+│   │   ├── environment/
+│   │   │   ├── Platform.java
+│   │   │   ├── Base.java
+│   │   │   ├── Background.java
+│   │   ├── hud/
+│   │   │   ├── Score.java
+│   │   │   ├── Hp.java
+│   │   │   ├── Shadow.java
+│   │   │   ├── Overlay.java
+│
+├── assets/
+│   ├── images/
+│   ├── audio/
+│
+├── res/
+│   ├── config.json
+│   ├── levels/
+│
+├── README.md
+├── build.gradle / pom.xml
+└── .gitignore
+
