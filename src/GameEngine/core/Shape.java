@@ -1,6 +1,7 @@
 package GameEngine.core;
 
 import GameEngine.core.utils.Point;
+import GameEngine.gui.loader.ImageLoader;
 import GameEngine.interfaces.IShape;
 import GameEngine.interfaces.IText;
 import java.awt.Image;
@@ -36,6 +37,7 @@ public class Shape implements IShape {
     private int currentFrame;
 
     private final boolean isText;
+    private boolean mirrored = false;
 
     private IText text;
 
@@ -70,7 +72,10 @@ public class Shape implements IShape {
             return this.text.getShape();
         }
 
-        return this.frames.get(currentFrame);
+        BufferedImage image = this.frames.get(currentFrame);
+        if (this.mirrored) image = ImageLoader.flipHorizontal(image);
+        
+        return image;
     }
 
     @Override
@@ -90,11 +95,12 @@ public class Shape implements IShape {
     }
 
     @Override
-    public void setFrame(int frame) {
+    public void setFrame(int frame, boolean mirrored) {
         if (this.isText) {
             return;
         }
 
+        this.mirrored = mirrored;
         this.currentFrame = frame; //TODO verificacao frame < 0, ou frame > len()
     }
 }

@@ -42,7 +42,7 @@ public class InputManager implements IInputManager {
 
     @Override
     public void clearRelease(){
-        releasedKeys = new HashSet<>();
+        releasedKeys.clear();
     }
 
     @Override

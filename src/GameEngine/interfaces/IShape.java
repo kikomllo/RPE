@@ -1,8 +1,7 @@
 package GameEngine.interfaces;
 
-import java.awt.Image;
-
 import GameEngine.core.utils.Point;
+import java.awt.Image;
 
 /**
  * Interface que representa a forma visual de um {@code IGameObject}.
@@ -41,5 +40,5 @@ public interface IShape {
      */
     public void nextFrame();
 
-    public void setFrame(int frame); //TODO comentar isto
+    public void setFrame(int frame, boolean mirrored); //TODO comentar isto
 }

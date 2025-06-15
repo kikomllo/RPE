@@ -1,5 +1,6 @@
 package Game;
 
+import Game.players.Neny;
 import GameEngine.GameEngine;
 import GameEngine.core.InputManager;
 import GameEngine.exceptions.GameWindowTooSmallException;
@@ -35,6 +36,8 @@ public class Game {
         }
 
         // OBJECT LOADING HERE
+
+        Neny neny = new Neny(engine);
 
         ui.showColliders(showColliders);
 
