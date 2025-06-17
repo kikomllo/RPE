@@ -1,5 +1,6 @@
 package Game;
 
+import Game.ambient.background.Background;
 import Game.players.Neny;
 import GameEngine.GameEngine;
 import GameEngine.core.InputManager;
@@ -37,7 +38,9 @@ public class Game {
 
         // OBJECT LOADING HERE
 
+        Background background = new Background(engine, ui);
         Neny neny = new Neny(engine);
+
 
         ui.showColliders(showColliders);
 

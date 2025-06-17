@@ -25,7 +25,7 @@ public abstract class GenericPlayerBehaviour extends Behaviour {
 
     protected final PlayerHealth health;
 
-    protected final double maxSpeed = 400;
+    protected final double maxSpeed = 250;
     protected final double velocityThreshold = 5;
     protected double velocityY = 0;
     protected double velocityX = 0;
@@ -163,7 +163,7 @@ public abstract class GenericPlayerBehaviour extends Behaviour {
 
     @SuppressWarnings("unused")
     private void showWalking(boolean walkDirection) {
-        final double INTERVAL_IN_SECONDS = 0.25;
+        final double INTERVAL_IN_SECONDS = 0.20;
 
         this.accuTimeIdle += this.dt;
 

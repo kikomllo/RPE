@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class Neny extends GenericPlayer {
-    private final Point POSITION = new Point(960, 200);
+    private final Point POSITION = new Point(0, 0);
 
     public Neny(IGameEngine engine) {
         this.engine = engine;

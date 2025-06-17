@@ -58,10 +58,20 @@ public class ImageLoader {
             return null;
         }
 
-        BufferedImage resizedImage = new BufferedImage(width, height, image.getType());
+        double imageWidth = image.getWidth();
+        double imageHeight = image.getHeight();
+        double ratio = imageHeight/imageWidth;
 
+        BufferedImage resizedImage = new BufferedImage(width, height, image.getType());
         Graphics2D g2d = resizedImage.createGraphics();
-        g2d.drawImage(image, 0, 0, width, height, null);
+
+        System.out.println("Width and Height: " + imageWidth + " " + imageHeight);
+        System.out.println("ratio: " + ratio);
+
+        if (Math.abs(width - imageWidth) < Math.abs(height - imageHeight)){
+            g2d.drawImage(image, 0, 0, width, (int)(width*ratio), null);
+        } else g2d.drawImage(image, 0, 0, (int)(height/ratio), height, null);
+
         g2d.dispose();
 
         return resizedImage;

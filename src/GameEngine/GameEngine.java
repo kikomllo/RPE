@@ -120,8 +120,8 @@ public class GameEngine implements IGameEngine {
                 IGameObject goB = this.enabled.get(j);
 
                 if (goA.isColliding(goB)) {
-                    collisionMap.computeIfAbsent(goA, _ -> new ArrayList<>()).add(goB);
-                    collisionMap.computeIfAbsent(goB, _ -> new ArrayList<>()).add(goA);
+                    collisionMap.computeIfAbsent(goA, ignored -> new ArrayList<>()).add(goB);
+                    collisionMap.computeIfAbsent(goB, ignored -> new ArrayList<>()).add(goA);
                 }
             }
         }
