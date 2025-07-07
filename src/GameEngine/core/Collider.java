@@ -1,11 +1,10 @@
 package GameEngine.core;
 
-import java.awt.Shape;
-
 import GameEngine.core.utils.Point;
 import GameEngine.core.utils.Vector;
 import GameEngine.interfaces.ICollider;
 import GameEngine.interfaces.ITransform;
+import java.awt.Shape;
 
 /**
  * Classe que representa um {@code Collider}, responsável por verificar colisões
@@ -36,7 +35,7 @@ public abstract class Collider implements ICollider {
         this.lastAngle = 0;
         this.lastScale = 1;
     }
-
+    
     public void onUpdate() {
         if (!this.transform.getPosition().equals(this.centroid())) {
             this.translation(new Vector(

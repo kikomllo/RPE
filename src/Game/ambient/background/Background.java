@@ -19,14 +19,9 @@ import java.util.List;
 
 public class Background {
     private Point center;
-
-    private IGameEngine engine;
-
-    private IGameObject go;
+    private final IGameObject go;
 
     public Background(IGameEngine engine, IGameUI ui) { //TODO talvez em vez de passar ui, passa se logo o height e o width
-        this.engine = engine;
-
         this.center = new Point(ui.getWidth() / 2, ui.getHeight() / 2);
 
         /* BufferedImage image = ImageLoader.loadImage("./resources/ambient/background/0.png");
@@ -51,8 +46,6 @@ public class Background {
 
         collider.onUpdate();
 
-        System.out.println(frames.get(0).getWidth() + "   " + frames.get(0).getHeight());
-
         int offsetX = (int) (-frames.get(0).getWidth()/2);
         int offsetY = (int) (-frames.get(0).getHeight()/2);
 
@@ -64,9 +57,5 @@ public class Background {
         behaviour.gameObject(background);
 
         this.go = background;
-    }
-
-    public void start() {
-        this.engine.addEnabled(go);
     }
 }

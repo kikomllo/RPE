@@ -1,5 +1,5 @@
 import Game.Game;
-import Game.InvalidGameNameException;
+import Game.exceptions.InvalidGameNameException;
 
 public class Main {
     public static void main(String[] args) {

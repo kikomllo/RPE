@@ -1,4 +1,4 @@
-package Game;
+package Game.exceptions;
 
 public class InvalidGameNameException extends Exception{
     public InvalidGameNameException(){

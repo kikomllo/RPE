@@ -69,15 +69,15 @@ public abstract class GenericPlayerBehaviour extends Behaviour {
     private double calcAxisMovement(boolean posMovement, boolean negMovement, double velocity){
         //double new_mov = acceleration * dt;
         
-        if (posMovement && !negMovement) {
-            velocity += acceleration * dt;
-            if (velocity > maxSpeed)
-                velocity = maxSpeed;
-        } else if (negMovement && !posMovement) {
-            velocity -= acceleration * dt;
-            if (velocity < -maxSpeed)
-                velocity = -maxSpeed;
+        int direction = 1;
+        if (posMovement ^ negMovement) {
+
+            if (!posMovement) direction = -1;
+            velocity += direction * acceleration * dt;
+            if (Math.abs(velocity) > maxSpeed)
+                velocity = direction * maxSpeed;
         } else {
+            
             if (velocity > 0) {
 
                 velocity -= deceleration * dt;
@@ -132,11 +132,8 @@ public abstract class GenericPlayerBehaviour extends Behaviour {
         this.gameObject().transform().move(movement, 0);
         this.gameObject().collider().onUpdate();
 
-        //TODO: NEED TO IMPLEMENT WALKING ANIM
-        if (Math.abs(velocityX) > 0 || Math.abs(velocityY) > 0) this.showWalking(changedDirection);
+        if (Math.abs(velocityX) > 0 || Math.abs(velocityY) > 0) this.showWalking();
         else this.showIdle();
-        
-        
     }
 
     @Override
@@ -162,7 +159,7 @@ public abstract class GenericPlayerBehaviour extends Behaviour {
     }
 
     @SuppressWarnings("unused")
-    private void showWalking(boolean walkDirection) {
+    private void showWalking() {
         final double INTERVAL_IN_SECONDS = 0.20;
 
         this.accuTimeIdle += this.dt;

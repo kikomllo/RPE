@@ -8,8 +8,7 @@ public class NenyBehaviour extends GenericPlayerBehaviour {
             KeyEvent.VK_W,
             KeyEvent.VK_S,
             KeyEvent.VK_A,
-            KeyEvent.VK_D,
-            KeyEvent.VK_1);
+            KeyEvent.VK_D);
 
     private static final List<Byte> frames = List.of(
             (byte) 2,
