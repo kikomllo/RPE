@@ -1,21 +1,27 @@
 package Game;
 
+import Game.ambient.ScreenManager;
 import Game.ambient.background.Background;
 import Game.exceptions.InvalidGameNameException;
-import Game.players.Neny;
-import Game.players.NenyBehaviour;
-import Game.players.PlayerHealth;
+import Game.objects.GenericPlayerBehaviour;
+import Game.objects.ObjectConfig;
+import Game.objects.ObjectManager;
 import GameEngine.GameEngine;
 import GameEngine.core.InputManager;
 import GameEngine.core.utils.Point;
 import GameEngine.exceptions.GameWindowTooSmallException;
 import GameEngine.exceptions.NullUserInterfaceException;
 import GameEngine.gui.GameUI;
-import GameEngine.interfaces.IBehaviour;
+import GameEngine.gui.GameUIConfig;
 import GameEngine.interfaces.IGameEngine;
 import GameEngine.interfaces.IGameObject;
 import GameEngine.interfaces.IGameUI;
+import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.List;
+
+import com.google.gson.Gson;
 
 public class Game {
     private final String name;
@@ -27,14 +33,20 @@ public class Game {
 
     @SuppressWarnings("CallToPrintStackTrace")
     public void start(boolean showColliders) {
+        Gson gson = new Gson();
         IGameUI ui = null;
         IGameEngine engine = null;
+        ScreenManager screenManager = null;
+        ObjectManager objectManager = new ObjectManager();
 
         try {
             //TODO ver o tamanho da janela, pode ser possivel expandir a altura
-            ui = new GameUI(new InputManager(), 1280, 720, this.name);
+
+            GameUIConfig uiConfig = gson.fromJson(new FileReader("./resources/configs/Window.json"), GameUIConfig.class);
+            ui = new GameUI(new InputManager(), 1980, 1080, this.name, uiConfig);
+            screenManager = new ScreenManager(objectManager, new Point(ui.getWidth()/2, ui.getHeight()/2));
             engine = new GameEngine(ui);
-        } catch (GameWindowTooSmallException | NullUserInterfaceException e) {
+        } catch (GameWindowTooSmallException | NullUserInterfaceException | FileNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -43,36 +55,52 @@ public class Game {
             System.exit(0);
         }
 
-        // OBJECT LOADING HERE
+        //** OBJECT LOADING HERE **//
 
-        Background background = new Background(engine, ui);
+        Background background = new Background(engine, ui, screenManager);
 
-        // Neny
+        ///////////////////////////////////// Globals
+        
+        GenericObjectLoader loader = new GenericObjectLoader(objectManager, screenManager, engine);
+         
+        final List<Integer> keySet = List.of(
+            KeyEvent.VK_W,
+            KeyEvent.VK_S,
+            KeyEvent.VK_A,
+            KeyEvent.VK_D
+        );
 
-        String name = "Neny";
-        Point position = new Point(0, 0);
-        int[] size = {
-            40, 64
-        };
-        int[] values = {
-            0, 0, 
-            0, size[0],
-            size[1], size[0],
-            size[1], 0
-        };
-        List<String> spritesPath = List.of(
-                "./resources/sprites/neny/default/0.png",
-                "./resources/sprites/neny/default/1.png",
-                "./resources/sprites/neny/default/Neny_Walking_11.png",
-                "./resources/sprites/neny/default/Neny_Walking_12.png",
-                "./resources/sprites/neny/default/Neny_Walking_13.png",
-                "./resources/sprites/neny/default/Neny_Walking_14.png");
-        IBehaviour playerBehaviour = new NenyBehaviour(new PlayerHealth(1), size[1]);
-        IGameObject neny = GenericObjectLoader.loadObject(
-            name, position, size, values, spritesPath, playerBehaviour, engine);
+        final List<Byte> animFrames = List.of(
+            (byte) 2,
+            (byte) 4
+        );
+
+        ///////////////////////////////////// Neny
+
+        try {
+            IGameObject neny = loader.loadObject(gson.fromJson(new FileReader("./resources/configs/Neny.json"), ObjectConfig.class));
+        } catch (FileNotFoundException ex) {
+        }
+
+        //////////////////////////////////// Neny Clone
+
+        try {
+            IGameObject paulinho = loader.loadObject(gson.fromJson(new FileReader("./resources/configs/Paulinho.json"), ObjectConfig.class));
+        } catch (FileNotFoundException ex) {
+        }
+
+        //////////////////////////////////// Engine Run
 
         ui.showColliders(showColliders);
 
         engine.run();
     }
+
+/*
+ * 
+ * Implement Zoom
+ * 
+ * Stat class or sum with gameobject finder for easy use
+ * 
+ */
 }

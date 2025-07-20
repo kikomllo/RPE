@@ -1,5 +1,6 @@
 package Game.ambient.background;
 
+import Game.ambient.ScreenManager;
 import GameEngine.core.CollCircle;
 import GameEngine.core.GameObject;
 import GameEngine.core.Shape;
@@ -19,9 +20,11 @@ import java.util.List;
 
 public class Background {
     private Point center;
+    private IGameUI ui;
     private final IGameObject go;
 
-    public Background(IGameEngine engine, IGameUI ui) { //TODO talvez em vez de passar ui, passa se logo o height e o width
+    public Background(IGameEngine engine, IGameUI ui, ScreenManager screenManager) {
+        this.ui = ui;
         this.center = new Point(ui.getWidth() / 2, ui.getHeight() / 2);
 
         /* BufferedImage image = ImageLoader.loadImage("./resources/ambient/background/0.png");
@@ -46,12 +49,9 @@ public class Background {
 
         collider.onUpdate();
 
-        int offsetX = (int) (-frames.get(0).getWidth()/2);
-        int offsetY = (int) (-frames.get(0).getHeight()/2);
+        IShape shape = new Shape(frames);
 
-        IShape shape = new Shape(frames, offsetX, offsetY);
-
-        IBehaviour behaviour = new BackgroundBehaviour();
+        IBehaviour behaviour = new BackgroundBehaviour(this.ui, screenManager);
 
         IGameObject background = new GameObject("background", transform, collider, shape, behaviour, engine);
         behaviour.gameObject(background);

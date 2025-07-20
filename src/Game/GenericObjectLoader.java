@@ -1,5 +1,9 @@
 package Game;
 
+import Game.ambient.ScreenManager;
+import Game.objects.GenericPlayerBehaviour;
+import Game.objects.ObjectConfig;
+import Game.objects.ObjectManager;
 import GameEngine.core.ColliderLoader;
 import GameEngine.core.GameObject;
 import GameEngine.core.Shape;
@@ -7,35 +11,61 @@ import GameEngine.core.Transform;
 import GameEngine.core.utils.Point;
 import GameEngine.exceptions.ColliderLoaderException;
 import GameEngine.gui.loader.ImageLoader;
-import GameEngine.interfaces.IBehaviour;
 import GameEngine.interfaces.ICollider;
 import GameEngine.interfaces.IGameEngine;
 import GameEngine.interfaces.IGameObject;
 import GameEngine.interfaces.IShape;
 import GameEngine.interfaces.ITransform;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class GenericObjectLoader{
-    public static IGameObject loadObject(String name, Point position, int[] size,
-                        int[] values, List<String> spritesPath, 
-                        IBehaviour behaviour, IGameEngine engine) 
+    ObjectManager objectManager;
+    ScreenManager screenManager;
+    IGameEngine engine;
+    
+    public GenericObjectLoader(ObjectManager objectManager, ScreenManager screenManager, IGameEngine engine){
+        this.objectManager = objectManager;
+        this.screenManager = screenManager;
+        this.engine = engine;
+    }
+
+    public IGameObject loadObject(ObjectConfig config) 
     {
-        ITransform transform = transformBuilder(position);
+        final List<Integer> keySet = List.of(
+            KeyEvent.VK_W,
+            KeyEvent.VK_S,
+            KeyEvent.VK_A,
+            KeyEvent.VK_D
+        );
+
+        final List<Byte> animFrames = List.of(
+            (byte) 2,
+            (byte) 4
+        );
+
+        //TODO: HARDCODED
+
+        ITransform transform = transformBuilder(config.position);
 
         ICollider collider = null;
         try {
-            collider = ColliderLoader.newGenericCollider(transform, values);
+            collider = ColliderLoader.newGenericCollider(transform, config.size);
             collider.onUpdate();
         } catch (ColliderLoaderException e) {
             e.printStackTrace();
         }
 
-        IShape shape = shapeBuilder(spritesPath, size);
+        IShape shape = shapeBuilder(config.path, config.size);
 
-        IGameObject go = new GameObject(name, transform, collider, shape, behaviour, engine);
+        GenericPlayerBehaviour behaviour = new GenericPlayerBehaviour(this.objectManager, this.screenManager, keySet, animFrames);
         
+        IGameObject go = new GameObject(config.name, transform, collider, shape, behaviour, engine);
+
         behaviour.gameObject(go);
+
+        this.objectManager.add(go);
 
         return go;
     }
@@ -52,7 +82,7 @@ public class GenericObjectLoader{
         return new Shape(sprites, -size[0]/2, -size[1]/2);
     }
 
-    public void setupTransform(int layer, double angle, double scale, IGameObject object){
+    public void setupTransform(Point position, int layer, double angle, double scale, IGameObject object){
 
     }
 }

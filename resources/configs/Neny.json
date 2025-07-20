@@ -1,0 +1,16 @@
+{
+    "name": "Neny",
+    "position": {
+        "x": "960",
+        "y": "540"
+    },
+    "size": ["50", "75"],
+    "path": [
+        "./resources/sprites/neny/default/0.png",
+        "./resources/sprites/neny/default/1.png",
+        "./resources/sprites/neny/walk/0.png",
+        "./resources/sprites/neny/walk/1.png",
+        "./resources/sprites/neny/walk/2.png",
+        "./resources/sprites/neny/walk/3.png"
+    ]
+}

@@ -1,48 +1,49 @@
-package Game.players;
+package Game.objects;
 
+import Game.ambient.ScreenManager;
 import GameEngine.core.Behaviour;
 import GameEngine.core.utils.Vector;
 import GameEngine.interfaces.IGameObject;
 import GameEngine.interfaces.IInputEvent;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
-public abstract class GenericPlayerBehaviour extends Behaviour {
+public class GenericPlayerBehaviour extends Behaviour {
     public class DirectionKey {
         public static final int UP = 0;
         public static final int DOWN = 1;
         public static final int LEFT = 2;
         public static final int RIGHT = 3;
     }
-
+    
     protected static final int MAX_JUMPS = 200;
     protected static final double TIME_BETWEEN_JUMPS = 0.15;
-
-    protected final int HEIGHT;
-
-    protected final List<Byte> SHAPE_MAP;
-
-    protected final List<Integer> KEYS;
-
-    protected final PlayerHealth health;
-
+    protected final ObjectManager playerManager; 
+    protected final ScreenManager screenManager;
+    
+    protected final List<Byte> ANIM_FRAMES;
+    
+    protected final List<Integer> keySet;
+    
     protected final double maxSpeed = 250;
     protected final double velocityThreshold = 5;
     protected double velocityY = 0;
     protected double velocityX = 0;
-
+    
     protected double acceleration = 3000;
     protected double deceleration = 1500;
-
+    
     protected double dt;
-
+    
     protected boolean lookingLeft;
     protected boolean wasLookingLeft;
-
+    
     protected boolean lastLookedLeft;
-
+    
     protected static final double intervalInSeconds = 0.25;
     protected double accumulatedTime = 0;
 
+    protected boolean active = false; 
     //////////////////////////////////////////////////// animacoes
 
     private double accuTimeIdle = 0;
@@ -52,15 +53,15 @@ public abstract class GenericPlayerBehaviour extends Behaviour {
     private double accuTimeWalking = 0;
     private int animWalkingCounter = 0;
 
-    public GenericPlayerBehaviour(List<Integer> keys, PlayerHealth health, List<Byte> shapeMap, int height) {
+    private double lastSwitched = 0;
 
-        this.KEYS = keys;
+    public GenericPlayerBehaviour(ObjectManager playerManager, ScreenManager screenManager, List<Integer> keySet, List<Byte> animFrames) {
+        this.playerManager = playerManager;
+        this.screenManager = screenManager;
 
-        this.HEIGHT = height;
+        this.keySet = keySet;
 
-        this.health = health;
-
-        this.SHAPE_MAP = shapeMap;
+        this.ANIM_FRAMES = animFrames;
 
         this.lookingLeft = true;
         this.wasLookingLeft = true;
@@ -78,7 +79,7 @@ public abstract class GenericPlayerBehaviour extends Behaviour {
                 velocity = direction * maxSpeed;
         } else {
             
-            if (velocity > 0) {
+            if (velocity > 0) { //TODO: Melhorar isto
 
                 velocity -= deceleration * dt;
                 if (velocity < 0)
@@ -90,49 +91,68 @@ public abstract class GenericPlayerBehaviour extends Behaviour {
                     velocity = 0;
             }
 
-            if (Math.abs(velocity) < velocityThreshold) { // TODO threshold aqui
+            if (Math.abs(velocity) < velocityThreshold) { // TODO threshold valor fixo aqui...
                 velocity = 0;
             }
         }
         return velocity;
     }
 
+    public void setActiveStatus(boolean status){
+        this.active = status;
+    }
+
     @Override
     public void onUpdate(long deltaTime, IInputEvent ie) {
+        
         this.dt = deltaTime / 1000.0;
+        this.lastSwitched += this.dt;
 
         Vector movement = new Vector(0, 0);
-
-        boolean[] currentMov = {
-            ie.contains(this.KEYS.get(DirectionKey.UP)),
-            ie.contains(this.KEYS.get(DirectionKey.DOWN)),
-            ie.contains(this.KEYS.get(DirectionKey.LEFT)),
-            ie.contains(this.KEYS.get(DirectionKey.RIGHT))
-        };
-
-        this.wasLookingLeft = this.lookingLeft;
-
-        if (currentMov[DirectionKey.LEFT] != currentMov[DirectionKey.RIGHT])
-            this.lookingLeft = currentMov[DirectionKey.LEFT];
-
-        boolean changedDirection = this.lookingLeft != this.wasLookingLeft;
-
-        if (changedDirection) {
-            this.animIdleCounter = 0;
-            this.animWalkingCounter = 0;
-
-            this.animIdleReset = true;
+        if(lastSwitched > 0.2 && playerManager.getIndex(gameObject()) == 0){
+            if (ie.contains(KeyEvent.VK_E)){
+                playerManager.activate(1, true);
+                lastSwitched = 0;
+            }
+            if (ie.contains(KeyEvent.VK_Q)){
+                playerManager.activate(-1, true);
+                lastSwitched = 0;
+            }
         }
 
-        velocityY = calcAxisMovement(currentMov[DirectionKey.DOWN], currentMov[DirectionKey.UP], velocityY);
-        velocityX = calcAxisMovement(currentMov[DirectionKey.RIGHT], currentMov[DirectionKey.LEFT], velocityX);
+        if (active){
+            boolean[] currentMov = {
+                ie.contains(this.keySet.get(DirectionKey.UP)),
+                ie.contains(this.keySet.get(DirectionKey.DOWN)),
+                ie.contains(this.keySet.get(DirectionKey.LEFT)),
+                ie.contains(this.keySet.get(DirectionKey.RIGHT))
+            };
 
-        movement.add(new Vector(velocityX * dt, velocityY * dt));
+            this.wasLookingLeft = this.lookingLeft;
 
+            if (currentMov[DirectionKey.LEFT] != currentMov[DirectionKey.RIGHT])
+                this.lookingLeft = currentMov[DirectionKey.LEFT];
+
+            boolean changedDirection = this.lookingLeft != this.wasLookingLeft;
+
+            if (changedDirection) {
+                this.animIdleCounter = 0;
+                this.animWalkingCounter = 0;
+
+                this.animIdleReset = true;
+            }
+
+            velocityY = calcAxisMovement(currentMov[DirectionKey.DOWN], currentMov[DirectionKey.UP], velocityY);
+            velocityX = calcAxisMovement(currentMov[DirectionKey.RIGHT], currentMov[DirectionKey.LEFT], velocityX);
+
+            movement.add(new Vector(velocityX * dt, velocityY * dt));
+        } else movement = new Vector(0, 0);
+        
         this.gameObject().transform().move(movement, 0);
+        this.gameObject().transform().move(screenManager.getOffset(), 0);
         this.gameObject().collider().onUpdate();
 
-        if (Math.abs(velocityX) > 0 || Math.abs(velocityY) > 0) this.showWalking();
+        if (Math.abs(movement.getX()) > 0 || Math.abs(movement.getY()) > 0) this.showWalking();
         else this.showIdle();
     }
 
@@ -149,7 +169,7 @@ public abstract class GenericPlayerBehaviour extends Behaviour {
         if (this.accuTimeIdle >= INTERVAL_IN_SECONDS || this.animIdleReset) {
             this.accuTimeIdle = 0.0;
 
-            if (this.animIdleCounter >= this.SHAPE_MAP.get(0)) {
+            if (this.animIdleCounter >= this.ANIM_FRAMES.get(0)) {
                 this.animIdleCounter = 0;
             }
 
@@ -158,7 +178,6 @@ public abstract class GenericPlayerBehaviour extends Behaviour {
         }
     }
 
-    @SuppressWarnings("unused")
     private void showWalking() {
         final double INTERVAL_IN_SECONDS = 0.20;
 
@@ -167,11 +186,11 @@ public abstract class GenericPlayerBehaviour extends Behaviour {
         if (this.accuTimeIdle >= INTERVAL_IN_SECONDS || this.animIdleReset) {
             this.accuTimeIdle = 0.0;
 
-            if (this.animIdleCounter >= this.SHAPE_MAP.get(1)) {
+            if (this.animIdleCounter >= this.ANIM_FRAMES.get(1)) {
                 this.animIdleCounter = 0;
             }
 
-            this.gameObject().shape().setFrame(this.SHAPE_MAP.get(0) + this.animIdleCounter++, !this.lookingLeft);
+            this.gameObject().shape().setFrame(this.ANIM_FRAMES.get(0) + this.animIdleCounter++, !this.lookingLeft);
             this.animIdleReset = false;
         }
     }

@@ -14,7 +14,7 @@ public class GameUI implements IGameUI {
     private final GameCanvas canvas;
     private final IInputManager inputManager;
 
-    public GameUI(IInputManager inputManager, int width, int height, String title) throws GameWindowTooSmallException {
+    public GameUI(IInputManager inputManager, int width, int height, String title, GameUIConfig config) throws GameWindowTooSmallException {
         this.gameWindow = new GameWindow(width, height);
 
         this.inputManager = inputManager;
@@ -34,6 +34,7 @@ public class GameUI implements IGameUI {
                     }
                 });
 
+        
         this.canvas.setFocusable(true);
         this.canvas.requestFocusInWindow();
 
@@ -75,11 +76,11 @@ public class GameUI implements IGameUI {
 
     @Override
     public int getHeight() {
-        return (int) this.gameWindow.getPreferredSize().getHeight(); // TODO talvez o int dê problemas?...
+        return (int) this.gameWindow.getHeight(); // TODO talvez o int dê problemas?...
     }
 
     @Override
     public int getWidth() {
-        return (int) this.gameWindow.getPreferredSize().getWidth();
+        return (int) this.gameWindow.getWidth();
     }
 }

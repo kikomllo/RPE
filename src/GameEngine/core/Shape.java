@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class Shape implements IShape {
     private List<BufferedImage> frames;
-    private final Point relativePosition;
+    private Point relativePosition;
 
     private int numberOfFrames;
     private int currentFrame;
@@ -45,6 +45,18 @@ public class Shape implements IShape {
         this.frames = List.of(image);
         this.relativePosition = new Point(offsetX, offsetY);
         this.numberOfFrames = 1;
+        this.currentFrame = 0;
+
+        this.isText = false;
+    }
+
+    public Shape(List<BufferedImage> frames) {
+        this.frames = frames;
+        this.relativePosition = new Point(
+            (int) (-frames.get(0).getWidth()/2), 
+            (int) (-frames.get(0).getHeight()/2)
+        );
+        this.numberOfFrames = frames.size();
         this.currentFrame = 0;
 
         this.isText = false;
@@ -81,6 +93,11 @@ public class Shape implements IShape {
     @Override
     public Point getRelativePosition() {
         return this.relativePosition;
+    }
+
+    @Override
+    public void setRelativePosition(Point relativePosition) {
+        this.relativePosition = relativePosition;
     }
 
     @Override

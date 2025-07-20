@@ -1,0 +1,16 @@
+{
+    "name": "Paulinho",
+    "position": {
+        "x": "960",
+        "y": "540"
+    },
+    "size": ["50", "75"],
+    "path": [
+        "./resources/sprites/paulinho/default/0.png",
+        "./resources/sprites/paulinho/default/1.png",
+        "./resources/sprites/paulinho/walk/0.png",
+        "./resources/sprites/paulinho/walk/1.png",
+        "./resources/sprites/paulinho/walk/2.png",
+        "./resources/sprites/paulinho/walk/3.png"
+    ]
+}

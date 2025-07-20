@@ -1,11 +1,10 @@
 package GameEngine.gui;
 
+import GameEngine.exceptions.GameWindowTooSmallException;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-
 import javax.swing.JFrame;
-
-import GameEngine.exceptions.GameWindowTooSmallException;
 
 public class GameWindow extends JFrame {
     private GameCanvas canvas;
@@ -19,10 +18,13 @@ public class GameWindow extends JFrame {
             throw new GameWindowTooSmallException("Window height must be > 0");
         }
 
-        setPreferredSize(new Dimension(width, height));
-        setBackground(Color.BLACK);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+        this.setPreferredSize(new Dimension(width, height));
+        this.setBackground(Color.BLACK);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setUndecorated(true);
+        this.setVisible(true);
     }
 
     public void setCanvas(GameCanvas gc) {
@@ -31,6 +33,7 @@ public class GameWindow extends JFrame {
         }
 
         this.canvas = gc;
+        this.setLayout(new BorderLayout());
         this.add(canvas);
 
         this.pack();

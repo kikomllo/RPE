@@ -34,6 +34,8 @@ public interface IShape {
      */
     public Point getRelativePosition();
 
+    public void setRelativePosition(Point relativePosition);
+
     /**
      * Avança para o próximo quadro da animação.
      * Este método é utilizado para animações que têm múltiplos quadros.
