@@ -4,6 +4,7 @@ import Game.ambient.ScreenManager;
 import GameEngine.core.Behaviour;
 import GameEngine.interfaces.IGameUI;
 import GameEngine.interfaces.IInputEvent;
+import GameEngine.interfaces.ITransform;
 
 public class BackgroundBehaviour extends Behaviour {
     private static final double intervalInSeconds = 2.0;
@@ -34,16 +35,17 @@ public class BackgroundBehaviour extends Behaviour {
             this.gameObject().shape().nextFrame();
         }
 
-        if (this.width != ui.getWidth() || this.height != ui.getHeight()){
-            this.width = ui.getWidth();
-            this.height = ui.getHeight();
-
-            //ITransform transform = this.gameObject().transform();
-            //transform.move(new Point(this.width/2, this.height/2).sub(transform.getPosition()), 0);
-        
-        }
-
         screenManager.updateValues();
-        this.gameObject().transform().move(screenManager.getOffset(), 0);
+
+        ITransform transform = this.gameObject().transform();
+
+        //Move relative to player centroid
+        transform.move(screenManager.getOffset(), 0);
+        
+        //Handle player drag from scaling
+        screenManager.setBoardCenter(transform.getPosition());
+
+        //Zoom relative to player spread
+        transform.scale(screenManager.getZoom() - transform.scale());
     }
 }

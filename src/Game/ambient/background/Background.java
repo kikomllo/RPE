@@ -38,7 +38,7 @@ public class Background {
 
         frames = ImageLoader.resizeAll(frames, ui.getWidth(), ui.getHeight());
 
-        ITransform transform = new Transform(this.center, -1, 0, 1);
+        ITransform transform = new Transform(this.center, -1, 0, 0.5);
 
         ICollider collider = null;
         try {

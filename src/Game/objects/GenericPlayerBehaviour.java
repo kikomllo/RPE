@@ -5,6 +5,7 @@ import GameEngine.core.Behaviour;
 import GameEngine.core.utils.Vector;
 import GameEngine.interfaces.IGameObject;
 import GameEngine.interfaces.IInputEvent;
+import GameEngine.interfaces.ITransform;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
@@ -147,9 +148,23 @@ public class GenericPlayerBehaviour extends Behaviour {
 
             movement.add(new Vector(velocityX * dt, velocityY * dt));
         } else movement = new Vector(0, 0);
+
+        ITransform transform = this.gameObject().transform();
         
-        this.gameObject().transform().move(movement, 0);
-        this.gameObject().transform().move(screenManager.getOffset(), 0);
+        transform.move(movement, 0);
+        
+        //Move with distance
+        transform.move(screenManager.getOffset(), 0);
+
+        /*
+        //Fix Drag from scaling
+        System.out.println(transform.getPosition());
+        transform.move(screenManager.computeDrag(transform.getPosition(), transform.scale()), 0);
+        System.out.println(transform.getPosition());
+        System.out.println();
+        */
+
+        transform.scale(screenManager.getZoom() - transform.scale());
         this.gameObject().collider().onUpdate();
 
         if (Math.abs(movement.getX()) > 0 || Math.abs(movement.getY()) > 0) this.showWalking();

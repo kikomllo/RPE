@@ -25,6 +25,8 @@ public class GenericObjectLoader{
     ScreenManager screenManager;
     IGameEngine engine;
     
+    public GenericObjectLoader(){}
+
     public GenericObjectLoader(ObjectManager objectManager, ScreenManager screenManager, IGameEngine engine){
         this.objectManager = objectManager;
         this.screenManager = screenManager;
@@ -82,7 +84,7 @@ public class GenericObjectLoader{
         return new Shape(sprites, -size[0]/2, -size[1]/2);
     }
 
-    public void setupTransform(Point position, int layer, double angle, double scale, IGameObject object){
-
+    public void setupTransform(Point position, IGameObject object){
+        object.transform().move(object.transform().getPosition().sub(position), 0);
     }
 }

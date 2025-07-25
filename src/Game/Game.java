@@ -1,14 +1,13 @@
 package Game;
 
+import Game.ambient.ScreenConfig;
 import Game.ambient.ScreenManager;
 import Game.ambient.background.Background;
 import Game.exceptions.InvalidGameNameException;
-import Game.objects.GenericPlayerBehaviour;
 import Game.objects.ObjectConfig;
 import Game.objects.ObjectManager;
 import GameEngine.GameEngine;
 import GameEngine.core.InputManager;
-import GameEngine.core.utils.Point;
 import GameEngine.exceptions.GameWindowTooSmallException;
 import GameEngine.exceptions.NullUserInterfaceException;
 import GameEngine.gui.GameUI;
@@ -40,11 +39,12 @@ public class Game {
         ObjectManager objectManager = new ObjectManager();
 
         try {
-            //TODO ver o tamanho da janela, pode ser possivel expandir a altura
 
             GameUIConfig uiConfig = gson.fromJson(new FileReader("./resources/configs/Window.json"), GameUIConfig.class);
+            ScreenConfig screenConfig = gson.fromJson(new FileReader("./resources/configs/ScreenBehaviour.json"), ScreenConfig.class);
+
             ui = new GameUI(new InputManager(), 1980, 1080, this.name, uiConfig);
-            screenManager = new ScreenManager(objectManager, new Point(ui.getWidth()/2, ui.getHeight()/2));
+            screenManager = new ScreenManager(objectManager, ui, screenConfig);
             engine = new GameEngine(ui);
         } catch (GameWindowTooSmallException | NullUserInterfaceException | FileNotFoundException e) {
             e.printStackTrace();
@@ -82,6 +82,11 @@ public class Game {
         } catch (FileNotFoundException ex) {
         }
 
+        try {
+            IGameObject nenyclone = loader.loadObject(gson.fromJson(new FileReader("./resources/configs/Neny.json"), ObjectConfig.class));
+        } catch (FileNotFoundException ex) {
+        }
+
         //////////////////////////////////// Neny Clone
 
         try {
@@ -98,7 +103,8 @@ public class Game {
 
 /*
  * 
- * Implement Zoom
+ * Fix Drag
+ *      Possible Solution: Transform spread to board relative
  * 
  * Stat class or sum with gameobject finder for easy use
  * 
