@@ -1,6 +1,6 @@
 RPE - Role Playing Engine
 
-    A modular and extensible 2D Game Engine in Java, designed to separate game logic, physics and rendering through a robust component-based structure.
+>A modular and extensible 2D Game Engine in Java, designed to separate game logic, physics and rendering through a robust component-based structure.
 
 Tech Stack
 
