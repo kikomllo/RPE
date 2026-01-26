@@ -1,14 +1,14 @@
--> RPE - Role Playing Engine
+RPE - Role Playing Engine
 
     A modular and extensible 2D Game Engine in Java, designed to separate game logic, physics and rendering through a robust component-based structure.
 
--> Tech Stack
+Tech Stack
 
     Language: Java (JDK 17+)
 
     Data Handling: GSON (JSON parsing)
 
--> Key Features
+Key Features
 
     .Core Engine: Life cycle managed by an independent GameEngine with FPS and DeltaTime control.
 
@@ -16,8 +16,10 @@
 
     .Input Management: Abstracted keyboard event handler to simplify control mapping and state management.
 
--> Project Structure
+Project Structure
 
     ./src/GameEngine/: Core Framework (Physics, Input, Life-Cycle).
+    
     ./src/Game/: Specific game implementation and logic.
+    
     ./resources/: External JSON configs and sprite assets.
