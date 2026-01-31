@@ -1,4 +1,4 @@
-# RPE - Role Playing Engine
+# RPE - Role Playing Engine (WIP)
 
 >A modular and extensible 2D Game Engine in Java, designed to separate game logic, physics and rendering through a robust component-based structure.
 
